@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Expedientes y Correos Confidenciales</title>
+  <style>
+    /* Estilo general */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0f0f0f; /* Fondo oscuro estilo policial */
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+    }
+
+    header {
+      background-color: #1c1c1c;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #444444;
+      position: relative; /* Para ubicar el temporizador fácilmente */
+    }
+
+    header h1 {
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    /* Contenedor del botón e indicador de tiempo */
+    #timerContainer {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #startTimerBtn {
+      background-color: #444;
+      border: 1px solid #666;
+      color: #fff;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    #startTimerBtn:hover {
+      background-color: #555;
+    }
+
+    #timerDisplay {
+      font-size: 16px;
+      font-family: monospace;
+    }
+
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .expediente {
+      background-color: #2f2f2f;
+      margin: 10px;
+      padding: 15px;
+      width: 300px;
+      border: 1px solid #444444;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    .expediente h2 {
+      margin-top: 0;
+      font-size: 18px;
+      border-bottom: 1px solid #444444;
+      padding-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .expediente img {
+      display: block;
+      max-width: 100%;
+      margin: 10px auto;
+      border: 2px solid #444444;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .expediente img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Modal overlay para imágenes ampliadas */
+    #modalOverlay {
+      position: fixed;
+      display: none; /* Oculto por defecto */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(2px);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    /* Imagen dentro del modal */
+    #modalImg {
+      max-width: 90%;
+      max-height: 90%;
+      border: 3px solid #444;
+      border-radius: 5px;
+      cursor: grab;
+      transition: transform 0.2s;
+    }
+
+    /* Botón de cierre del modal */
+    #closeBtn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 30px;
+      color: #ffffff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 10000;
+    }
+    #closeBtn:hover {
+      color: #d3d3d3;
+    }
+
+    /* Sección de Correos Electrónicos */
+    #correos {
+      background-color: #1c1c1c;
+      padding: 20px;
+    }
+
+    #correos h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #444;
+      padding-bottom: 10px;
+    }
+
+    .correo {
+      background-color: #2f2f2f;
+      margin: 15px auto;
+      padding: 15px;
+      max-width: 800px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      font-family: "Courier New", Courier, monospace;
+      line-height: 1.5;
+      text-align: justify; /* Justifica el contenido */
+    }
+
+    .correo h3 {
+      margin-top: 0;
+      font-size: 16px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+      text-align: left; /* Título de correo alineado a la izquierda */
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Expedientes Confidenciales</h1>
+    <div id="timerContainer">
+      <button id="startTimerBtn" onclick="startTimer()">Iniciar Temporizador (20 min)</button>
+      <span id="timerDisplay">20:00</span>
+    </div>
+  </header>
+
+  <!-- Sección de Expedientes con imágenes -->
+  <main>
+    <div class="expediente">
+      <h2>Expediente #1</h2>
+      <img src="1.png" alt="Expediente 1" onclick="abrirModal(this.src)" />
+    </div>
+    <div class="expediente">
+      <h2>Expediente #2</h2>
+      <img src="2.png" alt="Expediente 2" onclick="abrirModal(this.src)" />
+    </div>
+    <div class="expediente">
+      <h2>Expediente #3</h2>
+      <img src="3.png" alt="Expediente 3" onclick="abrirModal(this.src)" />
+    </div>
+    <div class="expediente">
+      <h2>Expediente #4</h2>
+      <img src="4.png" alt="Expediente 4" onclick="abrirModal(this.src)" />
+    </div>
+    <div class="expediente">
+      <h2>Expediente #5</h2>
+      <img src="5.png" alt="Expediente 5" onclick="abrirModal(this.src)" />
+    </div>
+    <div class="expediente">
+      <h2>Expediente #6</h2>
+      <img src="6.png" alt="Expediente 6" onclick="abrirModal(this.src)" />
+    </div>
+    <div class="expediente">
+      <h2>Expediente #7</h2>
+      <img src="7.png" alt="Expediente 7" onclick="abrirModal(this.src)" />
+    </div>
+  </main>
+
+  <!-- Sección de Correos Electrónicos de la Víctima -->
+  <section id="correos">
+    <h2>Correos Electrónicos de la Víctima</h2>
+
+    <!-- Correo 1 -->
+    <div class="correo">
+      <h3>Correo 1</h3>
+      <p><strong>Asunto:</strong> La reunión debe esperar</p>
+      <p>No quiero alarmarte, pero necesito que llegues un poco más tarde. Hay algo que debo resolver primero.</p>
+      <p>Nos veríamos antes, pero a las 11:17 p.m. tengo que hablar con alguien más en el parque. Es un asunto personal que necesito cerrar.</p>
+      <p>Después de eso, hablaremos de lo que realmente importa. No me gusta lo que he estado viendo últimamente, hay movimientos extraños en la empresa y ese tema de los fondos me tiene tenso.</p>
+      <p>No quiero hacer acusaciones sin pruebas, pero creo que necesito tu ayuda.</p>
+      <p>Llega a las 11:20 p.m. para que hablemos sin interrupciones. Solo necesito unos minutos antes para aclarar otras cosas.</p>
+      <p>No tardes demasiado. Esto es importante.</p>
+      <p>Cordialmente,<br>Carlos</p>
+    </div>
+
+    <!-- Correo 2 -->
+    <div class="correo">
+      <h3>Correo 2</h3>
+      <p><strong>Mi adorada Laura,</strong></p>
+      <p>No sé cómo explicarlo sin que mi corazón se acelere al escribirlo, pero cada segundo que pasa sin ti se siente como un castigo. El simple pensamiento de verte, de tenerte cerca, me da fuerzas para seguir adelante y enfrentar todo lo que venga. Sé que tu situación no ha sido fácil, pero quiero que recuerdes algo: tus problemas son mis problemas, y yo tengo los medios para solucionarlos.</p>
+      <p>No tienes que seguir soportando más discusiones, más incertidumbre, más humillaciones.</p>
+      <p>Pronto, todo esto quedará atrás. Sé paciente, mi amor, porque te prometo que, cuando todo termine, tendrás la tranquilidad que mereces y tus hijos también. Ya no habrá sombras que nos separen ni cadenas que te aten a una vida que no deseas.</p>
+      <p>En los próximos días, haré lo necesario para que no te falte nada. El dinero ya está listo; lo manejaré de manera discreta, como siempre lo he hecho. Solo te pido que confíes en mí.</p>
+      <p>Después de esto, nada ni nadie podrá impedirnos estar juntos.</p>
+      <p>Solo debes ser paciente. Lo demás... lo arreglaré yo. Solo haz tu parte acordada.</p>
+      <p>Tuyo, por siempre.</p>
+    </div>
+
+    <!-- Correo 3 -->
+    <div class="correo">
+      <h3>Correo 3</h3>
+      <p><strong>Fecha:</strong> 15 de marzo de 2025 (Un día antes del crimen)</p>
+      <p><strong>Asunto:</strong> Todo está listo</p>
+      <p>Ya no hay vuelta atrás. Todo está en marcha, exactamente como lo planeamos.</p>
+      <p>Mañana, a esta hora, todo habrá terminado y por fin podrás dejar esta pesadilla atrás. No te preocupes, nadie podrá rastrear nada hasta nosotros. Solo recuerda mantenerte al margen y seguir con tu rutina normal. Deja que yo me encargue de lo demás.</p>
+      <p>Cuando todo pase, tendrás la seguridad y el dinero que te prometí. Solo asegúrate de estar en casa y de no levantar sospechas. No podemos permitir errores en este punto.</p>
+      <p>Esta es nuestra oportunidad.</p>
+    </div>
+
+    <!-- Correo 4 -->
+    <div class="correo">
+      <h3>Correo 4</h3>
+      <p><strong>Asunto:</strong> Podemos hacerlo bien</p>
+      <p><strong>Fecha:</strong> 10 de marzo de 2025</p>
+      <p>Carlos,</p>
+      <p>He estado pensando mucho en cómo resolver esto sin más peleas. No quiero que terminemos como enemigos, y mucho menos que los niños sean quienes sufran. Quiero que esto sea justo para ambos.</p>
+      <p>No estoy detrás de tu dinero, ni quiero que pienses que estoy en tu contra. Solo deseo que lleguemos a un acuerdo que funcione para todos. Además, no sospeches mal de mí; tú me fuiste infiel antes que yo a ti, no me puedes culpar.</p>
+      <p>Avísame si podemos hablar pronto, en serio, sin abogados ni presiones.</p>
+      <p>Laura</p>
+    </div>
+
+    <!-- Correo 5 -->
+    <div class="correo">
+      <h3>Correo 5</h3>
+      <p><strong>Asunto:</strong> Podemos arreglar esto</p>
+      <p><strong>Fecha:</strong> 14 de marzo de 2025</p>
+      <p>Carlos,</p>
+      <p>No quiero que esto escale más de lo necesario. Sé que las cosas han estado tensas y que hay detalles que no te han gustado, pero creo que ambos estamos dejando que esto llegue demasiado lejos.</p>
+      <p>Podemos hablar y encontrar una solución antes de que se convierta en un problema real.</p>
+      <p>No quiero que pienses que te estoy presionando ni que esto es un asunto personal. Solo quiero que quede claro que hay caminos para resolver las cosas sin que nadie salga afectado. No tiene por qué terminar mal; solo necesitamos sentarnos y aclararlo.</p>
+      <p>Si todavía confías en mí, dime cuándo podemos vernos. Estoy dispuesto a hacerlo en cualquier momento, en cualquier lugar. Solo quiero que ambos podamos seguir adelante sin necesidad de complicaciones. Podemos arreglar el malentendido personal y el del dinero.</p>
+      <p>Espero tu respuesta.</p>
+    </div>
+
+    <!-- Correo 6 -->
+    <div class="correo">
+      <h3>Correo 6</h3>
+      <p><strong>De:</strong> [correo_ocultoEmpresa.com]</p>
+      <p><strong>Fecha:</strong> 12 de marzo de 2025</p>
+      <p><strong>Asunto:</strong> Última advertencia sobre pagos pendientes</p>
+      <p>Señor Carlos:</p>
+      <p>Hemos intentado resolver esto por las buenas, pero parece que usted prefiere ignorar nuestras advertencias. El tiempo se acaba, y la paciencia también. No es la primera vez que manejamos acuerdos como este, y sabemos muy bien qué ocurre cuando alguien no cumple con su parte.</p>
+      <p>Usted y su empresa han obtenido beneficios gracias a nuestra colaboración, y sería una lástima que esos detalles comenzaran a salir a la luz, perjudicándonos frente a la oficina de impuestos. Esos fondos que creemos usted desvió nos van a traer problemas.</p>
+      <p>Tal vez alguien más dentro de su empresa se hizo cargo de estos asuntos sin que usted lo sepa, pero los números no cuadran, y eso nos obliga a buscar respuestas. No queremos confusiones ni malentendidos: lo único que pedimos es lo que nos corresponde.</p>
+    </div>
+
+    <!-- Correo 7 -->
+    <div class="correo">
+      <h3>Correo 7</h3>
+      <p>Hace tiempo que no hablamos, pero necesito un favor y sé que tú eres el único que puede manejar este tipo de asuntos con discreción. Últimamente, ciertas personas han empezado a meterse en mis asuntos, y necesito que me ayudes a darles un aviso para que dejen de hostigarme. No les hagas nada, solo diles que paren. No sé quiénes son, pero necesito tu ayuda para saberlo y hacerles llegar el mensaje.</p>
+      <p>Sé que manejas bien este tipo de situaciones y por eso quiero que estés atento. No quiero que me sigan ni que se acerquen demasiado a donde no deben. Estoy dispuesto a pagar bien por tu tiempo y tu discreción, como siempre lo hemos manejado.</p>
+      <p>No quiero líos ni escenas innecesarias, solo una presencia en la sombra que disuada a los curiosos. Si alguien intenta acercarse demasiado, quiero saberlo antes de que sea tarde. Tú decides cómo manejarlo, siempre que el mensaje quede claro.</p>
+      <p>Hablamos pronto. Usa el mismo canal de siempre para confirmar.</p>
+      <p>Cordialmente,<br>Carlos</p>
+    </div>
+
+    <!-- Correo 8 -->
+    <div class="correo">
+      <h3>Correo 8</h3>
+      <p><strong>Estimado Carlos:</strong></p>
+      <p>Espero que te encuentres bien. Hace tiempo que no hablamos, y me alegra recibir noticias tuyas, aunque sea por este motivo. Entiendo la gravedad de la situación que mencionas y estoy aquí para ayudarte.</p>
+      <p>Como siempre, aprecio tu confianza en mí para manejar este tipo de asuntos con discreción. Tomaré las medidas necesarias para asegurarme de que no haya complicaciones y de que se mantenga la distancia adecuada con las personas que mencionas.</p>
+      <p>Me aseguraré de que tu mensaje quede claro y de que no haya ninguna sorpresa desagradable. No te preocupes, estaré atento a cualquier movimiento y te informaré de inmediato si alguien intenta acercarse demasiado.</p>
+      <p>En cuanto a la compensación, estamos en la misma sintonía. Haremos lo que sea necesario para que te sientas tranquilo y seguro. Hablamos pronto, y usaré el canal habitual para confirmar.</p>
+      <p>Un saludo.</p>
+    </div>
+  </section>
+
+  <!-- Modal para ampliar imagen con zoom y desplazamiento -->
+  <div id="modalOverlay" onclick="cerrarModal()">
+    <button id="closeBtn" onclick="cerrarModal()">×</button>
+    <img id="modalImg" alt="Ampliada" />
+  </div>
+
+  <script>
+    let escalaActual = 1.0;
+    let offsetX = 0;
+    let offsetY = 0;
+    let dragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let startOffsetX = 0;
+    let startOffsetY = 0;
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalImg = document.getElementById('modalImg');
+
+    // Actualiza la transformación (zoom y desplazamiento)
+    function updateTransform() {
+      modalImg.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${escalaActual})`;
+    }
+
+    // Abre el modal con la imagen seleccionada
+    function abrirModal(src) {
+      modalImg.src = src;
+      escalaActual = 1.0;
+      offsetX = 0;
+      offsetY = 0;
+      updateTransform();
+      modalOverlay.style.display = 'flex';
+    }
+
+    // Cierra el modal
+    function cerrarModal() {
+      modalOverlay.style.display = 'none';
+    }
+
+    // Evita el cierre del modal al hacer clic en la imagen
+    modalImg.addEventListener('click', function(event) {
+      event.stopPropagation();
+    });
+
+    // Manejo del zoom con la rueda del ratón
+    modalImg.addEventListener('wheel', function(event) {
+      event.preventDefault();
+      if (event.deltaY < 0) {
+        // Zoom in
+        escalaActual += 0.1;
+      } else {
+        // Zoom out
+        escalaActual -= 0.1;
+        if (escalaActual < 0.1) {
+          escalaActual = 0.1;
+        }
+      }
+      updateTransform();
+    });
+
+    // Eventos para arrastrar la imagen (ratón)
+    modalImg.addEventListener('mousedown', function(e) {
+      dragging = true;
+      modalImg.style.cursor = 'grabbing';
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      startOffsetX = offsetX;
+      startOffsetY = offsetY;
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (dragging) {
+        offsetX = startOffsetX + (e.clientX - dragStartX);
+        offsetY = startOffsetY + (e.clientY - dragStartY);
+        updateTransform();
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+      dragging = false;
+      modalImg.style.cursor = 'grab';
+    });
+
+    // Eventos para arrastrar la imagen (touch para móviles)
+    modalImg.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        dragging = true;
+        dragStartX = e.touches[0].clientX;
+        dragStartY = e.touches[0].clientY;
+        startOffsetX = offsetX;
+        startOffsetY = offsetY;
+      }
+    });
+
+    modalImg.addEventListener('touchmove', function(e) {
+      if (dragging && e.touches.length === 1) {
+        offsetX = startOffsetX + (e.touches[0].clientX - dragStartX);
+        offsetY = startOffsetY + (e.touches[0].clientY - dragStartY);
+        updateTransform();
+        e.preventDefault();
+      }
+    });
+
+    modalImg.addEventListener('touchend', function() {
+      dragging = false;
+    });
+
+    /* --------------------
+       Temporizador 20 min
+       -------------------- */
+    let totalTime = 20 * 60; // 20 minutos en segundos
+    let timerInterval = null;
+    let timerRunning = false;
+
+    function startTimer() {
+      // Evitar que se reinicie si ya está en marcha
+      if (timerRunning) return;
+      timerRunning = true;
+
+      // Actualiza el temporizador cada segundo
+      timerInterval = setInterval(() => {
+        // Calcula minutos y segundos
+        const minutes = Math.floor(totalTime / 60);
+        const seconds = totalTime % 60;
+        
+        // Formatea para mm:ss
+        document.getElementById('timerDisplay').textContent =
+          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        totalTime--;
+
+        // Si llega a 0, detiene y avisa
+        if (totalTime < 0) {
+          clearInterval(timerInterval);
+          alert("¡El tiempo para resolver el caso ha terminado!");
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
