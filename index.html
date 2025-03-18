@@ -418,38 +418,6 @@
     modalImg.addEventListener('touchend', function() {
       dragging = false;
     });
-
-    /* --------------------
-       Temporizador 20 min
-       -------------------- */
-    let totalTime = 20 * 60; // 20 minutos en segundos
-    let timerInterval = null;
-    let timerRunning = false;
-
-    function startTimer() {
-      // Evitar que se reinicie si ya está en marcha
-      if (timerRunning) return;
-      timerRunning = true;
-
-      // Actualiza el temporizador cada segundo
-      timerInterval = setInterval(() => {
-        // Calcula minutos y segundos
-        const minutes = Math.floor(totalTime / 60);
-        const seconds = totalTime % 60;
-        
-        // Formatea para mm:ss
-        document.getElementById('timerDisplay').textContent =
-          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-        totalTime--;
-
-        // Si llega a 0, detiene y avisa
-        if (totalTime < 0) {
-          clearInterval(timerInterval);
-          alert("¡El tiempo para resolver el caso ha terminado!");
-        }
-      }, 1000);
-    }
   </script>
 </body>
 </html>
